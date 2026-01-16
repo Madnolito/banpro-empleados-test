@@ -22,3 +22,8 @@ coverage/
 .idea/
 .vscode/
 EOF
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
