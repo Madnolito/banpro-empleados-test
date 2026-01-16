@@ -1,0 +1,1 @@
+from .employee import Employee  # Registra modelo ORM en el metadata de SQLAlchemy
