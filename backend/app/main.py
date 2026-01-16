@@ -1,12 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from app.core.config import settings
-
-app = FastAPI(
-    title="BANPRO Employees API",
-    version="0.0.1",
-)
-
+from sqlalchemy.orm import Session
+from app.db.session import get_db
+app = FastAPI(title="BANPRO Employees API", version="0.0.1",)
 
 @app.get("/test/env")
-def health():
-    return {"status": "ok", "env": settings.ENV}
+def test_env(db: Session = Depends(get_db)):
+    return {"env": settings.ENV, "db_ok": True}
