@@ -1,6 +1,7 @@
 from datetime import date
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+from app.utils.rut_validator import normalize_and_validate_rut
 
 
 class EmployeeBase(BaseModel):
@@ -12,6 +13,12 @@ class EmployeeBase(BaseModel):
     departamento: str = Field(..., min_length=2, max_length=80)
     fecha_ingreso: date
     activo: bool = True
+
+    @field_validator("rut")
+    @classmethod
+    def validate_rut(cls, v: str) -> str:
+        # devuelve el rut normalizado (ej: 12.345.678-5 -> 12345678-5)
+        return normalize_and_validate_rut(v)    
 
 
 class EmployeeCreate(EmployeeBase):
@@ -28,6 +35,13 @@ class EmployeeUpdate(BaseModel):
     departamento: Optional[str] = Field(None, min_length=2, max_length=80)
     fecha_ingreso: Optional[date] = None
     activo: Optional[bool] = None
+
+    @field_validator("rut")
+    @classmethod
+    def validate_rut(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        return normalize_and_validate_rut(v)    
 
 
 class EmployeeOut(EmployeeBase):
