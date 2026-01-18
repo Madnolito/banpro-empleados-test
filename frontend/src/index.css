@@ -1,3 +1,7 @@
+:root {
+    --font-family: 'Roboto', sans-serif;
+}
+
 *,
 *::before,
 *::after {
@@ -8,12 +12,14 @@ html, body, #root {
   min-height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #242424;
+  background-color: #ffffffff;
   letter-spacing: 1.2px;
+  font-family: var(--font-family);
   line-height: 1.8;
 }
+
 .main-container {
-  padding-top: 9rem;
+  padding-top: 1rem;
   box-sizing: border-box;
   min-height: 100vh; 
 }
