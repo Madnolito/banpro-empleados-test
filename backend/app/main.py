@@ -5,10 +5,24 @@ from app.api.routes.employees import router as employees_router
 from app.core.logging_config import setup_logging
 from app.middleware.request_logging import RequestLoggingMiddleware
 from app.core.exception_handlers import add_exception_handlers
+from fastapi.middleware.cors import CORSMiddleware
 
 setup_logging()
 
-app = FastAPI(title="BANPRO Employees API", version="0.0.3",)
+app = FastAPI(title="BANPRO Employees API", version="0.1.0",)
+
+origins = [
+    "http://localhost:5173",  # React + vite frontend
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,   # cookies 
+    allow_methods=["*"],      # get + post + put + delete
+    allow_headers=["*"],      # Authorization, Content-Type y demas
+)
+
 add_exception_handlers(app)
 app.add_middleware(RequestLoggingMiddleware)
 
