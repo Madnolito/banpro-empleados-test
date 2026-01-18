@@ -14,7 +14,7 @@ export default function EmployeesTableTest() {
       const result = await listEmployees({ page: 1, page_size: 10 });
       setData(result);
     } catch (error) {
-        setErr(error);
+        setErr("Error en la llamada");
         console.error("Error during preload:", error);
     } finally {
         setLoading(false);
@@ -30,7 +30,7 @@ export default function EmployeesTableTest() {
 
   return (
     <div style={{ padding: 16, fontFamily: "Arial" }}>
-      <h2>Employees test</h2>
+      <h2 style={{ color: 'white'}}>Employees test</h2>
 
       <button onClick={load} disabled={loading}>
         {loading ? "Cargando..." : "Refrescar"}

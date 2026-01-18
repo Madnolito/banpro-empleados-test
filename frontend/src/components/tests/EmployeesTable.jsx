@@ -54,6 +54,7 @@ export default function EmployeesTable({ data }) {
                 <td
                   key={col}
                   style={{
+                    color:'white',
                     padding: "10px 8px",
                     borderBottom: "1px solid #eee",
                     verticalAlign: "top",
