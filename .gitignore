@@ -27,3 +27,7 @@ EOF
 *.db
 *.sqlite
 *.sqlite3
+
+#logs
+logs.txt
+*.log

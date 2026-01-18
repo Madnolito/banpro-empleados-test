@@ -1,5 +1,6 @@
 from typing import List, Optional
-
+import logging
+logger = logging.getLogger("app.employees")
 from fastapi import APIRouter, Depends, HTTPException, Query # (Depends) inyeccion de dependencias, (Query) validaciones
 from sqlalchemy.orm import Session
 
@@ -48,7 +49,9 @@ def post_employee(payload: EmployeeCreate, db: Session = Depends(get_db)): # val
     if get_employee_by_rut(db, payload.rut):
         raise HTTPException(status_code=400, detail="Este RUT ya existe!")
 
-    return create_employee(db, payload) # db y body
+    employee = create_employee(db, payload)
+    logger.info("CREATE employee id=%s rut=%s", employee.id, employee.rut)
+    return employee
 
 
 # ----------- PUT employee ----------- 
@@ -64,7 +67,12 @@ def put_employee(employee_id: int, payload: EmployeeUpdate, db: Session = Depend
         if get_employee_by_rut(db, payload.rut):
             raise HTTPException(status_code=400, detail="Este RUT ya existe!")
 
-    return update_employee(db, employee, payload)
+    data = payload.model_dump(exclude_unset=True)
+    changed_fields = list(data.keys())
+
+    updated = update_employee(db, employee, payload)
+    logger.info("UPDATE employee id=%s fields=%s", employee_id, changed_fields)
+    return updated
 
 
 # ----------- GET details -----------
@@ -85,4 +93,6 @@ def delete_employee(employee_id: int, db: Session = Depends(get_db)):
     if not employee:
         raise HTTPException(status_code=404, detail="Empleado no encontrado")
 
-    return deactivate_employee(db, employee)
+    deactivated = deactivate_employee(db, employee)
+    logger.info("DEACTIVATE employee id=%s", employee_id)
+    return deactivated
