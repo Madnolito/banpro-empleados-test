@@ -1,3 +1,4 @@
+import EmployeesTableTest from './components/tests/EmployeesTableTest'
 import './index.css'
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
           By Emanuel Tapia
         </p>
       </div>
+      <EmployeesTableTest />
     </>
   )
 }
