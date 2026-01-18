@@ -5,6 +5,8 @@ import { HashRouter } from 'react-router-dom';
 import App from './App';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+console.debug("Version: " + __PACKAGE_JSON_VERSION__); // version debug, para controlar versiones
+
 //config global de react query
 //guarda resultados en cache, maneja loading/error, reintentos etc
 const queryClient = new QueryClient({
