@@ -14,7 +14,7 @@ describe("ConfirmDialog", () => {
       <ConfirmDialog
         open
         title="Dar de baja a empleado"
-        description="¿Seguro que quieres Dar de baja?"
+        description="¿Seguro que quieres dar de baja?"
         onCancel={onCancel}
         onConfirm={onConfirm}
         confirmText="Sí, Dar de baja "
@@ -35,7 +35,7 @@ describe("ConfirmDialog", () => {
       <ConfirmDialog
         open
         title="Dar de baja a empleado"
-        description="¿Seguro que quieres Dar de baja?"
+        description="¿Seguro que quieres dar de baja?"
         onCancel={onCancel}
         onConfirm={onConfirm}
         confirmText="Sí, Dar de baja"
