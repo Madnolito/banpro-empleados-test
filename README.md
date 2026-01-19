@@ -67,6 +67,20 @@ Then update the values in each `.env` as needed.
 - Run the App: `npm run dev`
 
 
+## Tests
+
+### Backend (pytest)
+- `cd backend`
+From `backend/`:
+- Run tests: `pytest -q`
+
+### Frontend (Vitest)
+- `cd frontend`
+From `frontend/`:
+- Run tests: `npm run test`
+- (Optional) UI runner: `npm run test:ui`
+
+
 ## Notes
 - Backend runs on: `http://localhost:8000`
 - Frontend runs on: `http://localhost:5173` (default Vite port)
