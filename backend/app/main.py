@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # inicializa config de logging antes usar la app
 setup_logging()
 
-app = FastAPI(title="BANPRO Employees API", version="0.1.0",)
+app = FastAPI(title="BANPRO Employees API", version="0.1.1",)
 
 origins = [
     "http://localhost:5173", # React + vite frontend
