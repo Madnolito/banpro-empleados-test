@@ -74,7 +74,7 @@ export async function updateEmployee(employeeId, payload) {
   }
 }
 
-// DELETE /employees/{id} true o false
+// DEACTIVATE /employees/{id} true o false
 export async function deactivateEmployee(employeeId) {
   try {
     const res = await api.delete(`/employees/${employeeId}`);
@@ -89,3 +89,19 @@ export async function deactivateEmployee(employeeId) {
     throw new Error(getApiErrorMessage(error));
   }
 }
+
+// DELETE /employees/{id} true o false
+// export async function deleteEmployee(employeeId) {
+//   try {
+//     const res = await api.delete(`/employees/${employeeId}`);
+//     return res.data;
+//   } catch (error) {
+//     console.error("API Error [deleteEmployee]:", {
+//       employeeId,
+//       message: getApiErrorMessage(error),
+//       status: error?.response?.status,
+//       data: error?.response?.data,
+//     });
+//     throw new Error(getApiErrorMessage(error));
+//   }
+// }

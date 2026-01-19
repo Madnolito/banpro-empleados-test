@@ -12,11 +12,11 @@ class Employee(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
 
     rut: Mapped[str] = mapped_column(String(12), unique=True, index=True, nullable=False)
-    nombre: Mapped[str] = mapped_column(String(120), nullable=False)
+    nombre: Mapped[str] = mapped_column(String(120), index=True, nullable=False)
 
     fecha_nacimiento: Mapped["Date"] = mapped_column(Date, nullable=False)
 
-    cargo: Mapped[str] = mapped_column(String(80), nullable=False)
+    cargo: Mapped[str] = mapped_column(String(80), index=True, nullable=False)
     departamento: Mapped[str] = mapped_column(String(80), index=True, nullable=False)
 
     fecha_ingreso: Mapped["Date"] = mapped_column(Date, nullable=False)

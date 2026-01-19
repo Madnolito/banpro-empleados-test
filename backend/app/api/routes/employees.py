@@ -25,7 +25,9 @@ def get_employees( # validaciones automaticas
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=100),
     rut: Optional[str] = None,
+    nombre: Optional[str] = None,
     departamento: Optional[str] = None,
+    cargo: Optional[str] = None,
     activo: Optional[bool] = None,
     q: Optional[str] = None,
     db: Session = Depends(get_db),
@@ -35,7 +37,9 @@ def get_employees( # validaciones automaticas
         page=page,
         page_size=page_size,
         rut=rut,
+        nombre=nombre,
         departamento=departamento,
+        cargo=cargo,
         activo=activo,
         q=q,
     )
@@ -85,7 +89,7 @@ def get_employee_detail(employee_id: int, db: Session = Depends(get_db)):
     return employee
 
 
-# ----------- DELETE -----------
+# ----------- DEACTIVATE -----------
 
 @router.delete("/{employee_id}", response_model=EmployeeOut)
 def delete_employee(employee_id: int, db: Session = Depends(get_db)):
@@ -96,3 +100,15 @@ def delete_employee(employee_id: int, db: Session = Depends(get_db)):
     deactivated = deactivate_employee(db, employee)
     logger.info("DEACTIVATE employee id=%s", employee_id)
     return deactivated
+
+
+# ----------- DELETE -----------
+
+# @router.delete("/{employee_id}", response_model=EmployeeOut)
+# def delete_employee(employee_id: int, db: Session = Depends(get_db)):
+#     employee = get_employee(db, employee_id)
+#     if not employee:
+#         raise HTTPException(status_code=404, detail="Empleado no encontrado")
+#     deleted = delete_employee(db, employee)
+#     logger.info("DELETE employee id=%s", employee_id)
+#     return deleted

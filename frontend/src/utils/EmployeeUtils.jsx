@@ -8,9 +8,6 @@ export function formatRutIfComplete(cleaned, forceEightAsComplete = false) {
   if (cleaned.length === 9) {
     return `${cleaned.slice(0, 8)}-${cleaned.slice(8)}`;
   }
-  if (forceEightAsComplete && cleaned.length === 8) {
-    return `${cleaned.slice(0, 7)}-${cleaned.slice(7)}`;
-  }
   return cleaned; // incompleto se deja sin guion
 }
 

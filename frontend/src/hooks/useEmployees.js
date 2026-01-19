@@ -9,12 +9,13 @@ import {
 
 export function useEmployeesList(params) {
   return useQuery({
-    queryKey: ["employees", "list", params], // QueryKey = ID de la consulta en cache, si params cambia significa que es otra consulta
+    queryKey: ["employees", "list", params], // QueryKey = ID de la consulta en cache, react Query ve que es otra key hace otra consulta con cache separado
     queryFn: () => listEmployees(params),  // func que trae los datos de AXIOS
-    keepPreviousData: true, // clave o flag para la UI especificamente para la tabla, por ejemplo para evitar parpadeos
+    keepPreviousData: true, // clave o flag para la UI especificamente para la tabla, mantiene resultados anteriores mientras llegan los nuevos
   });
 }
 
+// detalle del empleado
 export function useEmployee(employeeId) {
   return useQuery({
     queryKey: ["employees", "detail", employeeId], 
@@ -27,7 +28,7 @@ export function useCreateEmployee() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (payload) => createEmployee(payload), // ejecuta POST
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["employees", "list"] }), // avisa a React Query que la lista cambio y refresh
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["employees", "list"] }), // avisa a React Query que la lista cambio pero el cache tiene lo anterior y hace refresh
   });
 }
 
@@ -36,12 +37,13 @@ export function useUpdateEmployee(employeeId) {
   return useMutation({
     mutationFn: (payload) => updateEmployee(employeeId, payload),
     onSuccess: (updated) => {
-      qc.invalidateQueries({ queryKey: ["employees", "list"] });
+      qc.invalidateQueries({ queryKey: ["employees", "list"] }); // al cerrar modal al guardar refresca solo la lista
       qc.setQueryData(["employees", "detail", employeeId], updated);
     }
   });
 }
 
+//empleado de activo=false
 export function useDeactivateEmployee() {
   const qc = useQueryClient();
   return useMutation({

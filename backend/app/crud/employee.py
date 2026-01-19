@@ -37,7 +37,9 @@ def list_employees(
     page: int = 1,
     page_size: int = 10,
     rut: Optional[str] = None,
+    nombre: Optional[str] = None,
     departamento: Optional[str] = None,
+    cargo: Optional[str] = None,
     activo: Optional[bool] = None,
     q: Optional[str] = None,
 ) -> List[Employee]:
@@ -48,15 +50,19 @@ def list_employees(
 
     if rut:
         stmt = stmt.where(Employee.rut == rut)
+    if nombre:
+        stmt = stmt.where(Employee.nombre.ilike(nombre))        
     if departamento:
         stmt = stmt.where(Employee.departamento.ilike(departamento))
+    if cargo:
+        stmt = stmt.where(Employee.cargo.ilike(cargo))        
     if activo is not None:
         stmt = stmt.where(Employee.activo == activo)
 
     if q:
         q_like = f"%{q}%"
         stmt = stmt.where(
-            (Employee.rut.ilike(q_like)) | (Employee.departamento.ilike(q_like)) # busca rut o departamento
+            (Employee.rut.ilike(q_like)) | (Employee.nombre.ilike(q_like)) | (Employee.departamento.ilike(q_like)) | (Employee.cargo.ilike(q_like)) # busca rut, depa, nom, cargo
         )
 
     offset = (page - 1) * page_size
@@ -88,3 +94,8 @@ def deactivate_employee(db: Session, employee: Employee) -> Employee:
     db.commit()
     db.refresh(employee)
     return employee
+
+# def delete_employee(db: Session, employee: Employee) -> Employee:
+#     db.delete(employee)
+#     db.commit()
+#     return employee

@@ -33,10 +33,12 @@ export default function EmployeesTable() {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const MAX_TEXT = 20;
-  // Draft de boton Aplicar)
+  // Draft de boton Aplicar
   const [draft, setDraft] = useState({
     rut: "",
+    nombre: "",
     departamento: "",
+    cargo: "",
     activo: "", // "", "true", "false"
     q: "",
   });
@@ -49,7 +51,9 @@ export default function EmployeesTable() {
 
   const [applied, setApplied] = useState({
     rut: "",
+    nombre: "",
     departamento: "",
+    cargo: "",
     activo: "",
     q: "",
   });
@@ -71,7 +75,9 @@ export default function EmployeesTable() {
   const params = useMemo(() => {
     const p = { page: page + 1, page_size: pageSize }; // backend 1-based
     if (applied.rut.trim()) p.rut = applied.rut.trim();
+    if (applied.nombre.trim()) p.nombre = applied.nombre.trim();
     if (applied.departamento.trim()) p.departamento = applied.departamento.trim();
+    if (applied.cargo.trim()) p.cargo = applied.cargo.trim();
     if (applied.activo !== "") p.activo = applied.activo === "true";
     if (applied.q.trim()) p.q = applied.q.trim();
     return p;
@@ -117,7 +123,7 @@ export default function EmployeesTable() {
   };
 
   const onClear = () => {
-    const cleared = { rut: "", departamento: "", activo: "", q: "" };
+    const cleared = { rut: "", nombre: "", departamento: "", cargo:"", activo: "", q: "" };
     setDraft(cleared);
     setApplied(cleared);
     setPage(0);

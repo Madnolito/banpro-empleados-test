@@ -7,6 +7,7 @@ from app.middleware.request_logging import RequestLoggingMiddleware
 from app.core.exception_handlers import add_exception_handlers
 from fastapi.middleware.cors import CORSMiddleware
 
+# inicializa config de logging antes usar la app
 setup_logging()
 
 app = FastAPI(title="BANPRO Employees API", version="0.1.0",)
@@ -34,4 +35,4 @@ def on_startup():
     init_db()
 
 
-app.include_router(employees_router)    
+app.include_router(employees_router) # registra el router API 
