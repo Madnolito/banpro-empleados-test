@@ -11,9 +11,9 @@ engine = create_engine(
 
 # Sesiones hacia la DB
 SessionLocal = sessionmaker(
-    autocommit=False,
+    autocommit=False, # control de commits
     autoflush=False,
-    bind=engine,
+    bind=engine, # conecta engine
 )
 
 def get_db():
