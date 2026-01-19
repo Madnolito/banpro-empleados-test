@@ -27,12 +27,14 @@ import { useEmployeesList, useDeactivateEmployee } from "../hooks/useEmployees";
 import EmployeeDialog from "./EmployeeDialog";
 import ConfirmDialog from "./ConfirmDialog";
 import { cleanRut, formatRutIfComplete, isRutValidFinal } from "../utils/EmployeeUtils";
+import TableSortLabel from "@mui/material/TableSortLabel";
 
 export default function EmployeesTable() {
   // MUI TablePagination es 0-based
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const MAX_TEXT = 20;
+  const [sort, setSort] = useState({ by: "", dir: "asc" }); // by - nombre - id  etc
   // Draft de boton Aplicar
   const [draft, setDraft] = useState({
     rut: "",
@@ -173,6 +175,59 @@ export default function EmployeesTable() {
     setErrors((er) => ({ ...er, q: "" }));
   };  
 
+  const toggleSort = (col) => {
+    setSort((s) => {
+      if (s.by !== col) return { by: col, dir: "asc" };
+      return { by: col, dir: s.dir === "asc" ? "desc" : "asc" };
+    });
+  };
+
+  // helper: define columna fecha tipo "YYYY-MM-DD"
+  const toComparable = (val, col) => {
+    if (val == null) return null;
+
+    // fechas como "2025-01-19"
+    if (col === "fecha_nacimiento" || col === "fecha_ingreso") {
+      const t = Date.parse(val);
+      return Number.isNaN(t) ? val : t;
+    }
+
+    // boolean
+    if (typeof val === "boolean") return val ? 1 : 0;
+
+    // number
+    if (typeof val === "number") return val;
+
+    // string
+    return String(val).toLowerCase();
+  };
+
+  const sortedRows = useMemo(() => {
+    if (!sort.by) return rows;
+
+    const arr = [...rows];
+    arr.sort((a, b) => {
+      const va = toComparable(a?.[sort.by], sort.by);
+      const vb = toComparable(b?.[sort.by], sort.by);
+
+      // nulls al final
+      if (va == null && vb == null) return 0;
+      if (va == null) return 1;
+      if (vb == null) return -1;
+
+      // string compare
+      if (typeof va === "string" && typeof vb === "string") {
+        return sort.dir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
+      }
+
+      // numeric compare
+      if (va === vb) return 0;
+      return sort.dir === "asc" ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+    });
+
+    return arr;
+  }, [rows, sort]);
+  
   return (
     <Box sx={{ p: 6 }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
@@ -255,14 +310,84 @@ export default function EmployeesTable() {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>RUT</TableCell>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Departamento</TableCell>
-              <TableCell>Cargo</TableCell>
-              <TableCell>F. Nac</TableCell>
-              <TableCell>F. Ing</TableCell>
-              <TableCell>Activo</TableCell>
+              <TableCell sortDirection={sort.by === "id" ? sort.dir : false}>
+                <TableSortLabel
+                  active={sort.by === "id"}
+                  direction={sort.by === "id" ? sort.dir : "asc"}
+                  onClick={() => toggleSort("id")}
+                >
+                  ID
+                </TableSortLabel>
+              </TableCell>
+              <TableCell sortDirection={sort.by === "rut" ? sort.dir : false}>
+                <TableSortLabel
+                  active={sort.by === "rut"}
+                  direction={sort.by === "rut" ? sort.dir : "asc"}
+                  onClick={() => toggleSort("rut")}
+                >
+                  RUT
+                </TableSortLabel>
+              </TableCell>
+
+              <TableCell sortDirection={sort.by === "nombre" ? sort.dir : false}>
+                <TableSortLabel
+                  active={sort.by === "nombre"}
+                  direction={sort.by === "nombre" ? sort.dir : "asc"}
+                  onClick={() => toggleSort("nombre")}
+                >
+                  Nombre
+                </TableSortLabel>
+              </TableCell>
+
+              <TableCell sortDirection={sort.by === "departamento" ? sort.dir : false}>
+                <TableSortLabel
+                  active={sort.by === "departamento"}
+                  direction={sort.by === "departamento" ? sort.dir : "asc"}
+                  onClick={() => toggleSort("departamento")}
+                >
+                  Departamento
+                </TableSortLabel>
+              </TableCell>
+
+              <TableCell sortDirection={sort.by === "cargo" ? sort.dir : false}>
+                <TableSortLabel
+                  active={sort.by === "cargo"}
+                  direction={sort.by === "cargo" ? sort.dir : "asc"}
+                  onClick={() => toggleSort("cargo")}
+                >
+                  Cargo
+                </TableSortLabel>
+              </TableCell>
+
+              <TableCell sortDirection={sort.by === "fecha_nacimiento" ? sort.dir : false}>
+                <TableSortLabel
+                  active={sort.by === "fecha_nacimiento"}
+                  direction={sort.by === "fecha_nacimiento" ? sort.dir : "asc"}
+                  onClick={() => toggleSort("fecha_nacimiento")}
+                >
+                  F. Nac
+                </TableSortLabel>
+              </TableCell>
+
+              <TableCell sortDirection={sort.by === "fecha_ingreso" ? sort.dir : false}>
+                <TableSortLabel
+                  active={sort.by === "fecha_ingreso"}
+                  direction={sort.by === "fecha_ingreso" ? sort.dir : "asc"}
+                  onClick={() => toggleSort("fecha_ingreso")}
+                >
+                  F. Ing
+                </TableSortLabel>
+              </TableCell>
+
+              <TableCell sortDirection={sort.by === "activo" ? sort.dir : false}>
+                <TableSortLabel
+                  active={sort.by === "activo"}
+                  direction={sort.by === "activo" ? sort.dir : "asc"}
+                  onClick={() => toggleSort("activo")}
+                >
+                  Activo
+                </TableSortLabel>
+              </TableCell>
               <TableCell align="right">Acciones</TableCell>
             </TableRow>
           </TableHead>
@@ -280,7 +405,7 @@ export default function EmployeesTable() {
               </TableRow>
             )}
 
-            {rows.map((r) => (
+            {sortedRows.map((r) => (
               <TableRow key={r.id} hover>
                 <TableCell>{r.id}</TableCell>
                 <TableCell>{r.rut}</TableCell>
